@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>曲面 z = (y - x²)(y - 2x²)</title>
+  <!-- MathJax v2 の読み込み -->
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+  <!-- Plotly.js の読み込み -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+    #plot { width: 90vw; height: 90vh; }
+  </style>
+</head>
+<body>
+
+<div id="plot"></div>
+
+<script>
+  const size = 100;
+  const x = [], y = [], z = [];
+  
+  // 原点付近の複雑な変化が見やすいように範囲を設定
+  const xRange = 1.5;
+  const yRange = 2.0;
+
+  for (let i = 0; i < size; i++) {
+    x[i] = -xRange + (2 * xRange * i) / (size - 1);
+    y[i] = -0.5 + ((yRange + 0.5) * i) / (size - 1);
+  }
+
+  // z = (y - x^2)(y - 2*x^2) の計算
+  for (let i = 0; i < size; i++) {
+    z[i] = [];
+    for (let j = 0; j < size; j++) {
+      const xi = x[j];
+      const yj = y[i];
+      z[i][j] = (yj - Math.pow(xi, 2)) * (yj - 2 * Math.pow(xi, 2));
+    }
+  }
+
+  const data = [{
+    z: z,
+    x: x,
+    y: y,
+    type: 'surface',
+    colorscale: 'Viridis'
+  }];
+
+  const layout = {
+    // \text{} を使って日本語タイトルと数式を同時に綺麗に表示します
+    title: { text: '$\\text{曲面 } z = (y - x^2)(y - 2x^2)$' },
+    autosize: true,
+    scene: {
+      xaxis: { title: { text: 'x' } },
+      yaxis: { title: { text: 'y' } },
+      zaxis: { title: { text: 'z' } }
+    }
+  };
+
+  Plotly.newPlot('plot', data, layout);
+</script>
+
+</body>
+</html>
